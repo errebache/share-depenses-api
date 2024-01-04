@@ -1,0 +1,29 @@
+{
+  "name": "share-depanses",
+  "version": "1.0.0",
+  "description": "\"Share-depenses est une application web innovante conçue pour faciliter la gestion et le partage des dépenses au sein de groupes. Que ce soit pour des colocations, des voyages entre amis ou des événements familiaux, cette application permet aux utilisateurs de suivre facilement leurs dépenses communes, de calculer les montants dus par chaque personne, et de simplifier les remboursements. Avec une interface utilisateur intuitive et des fonctionnalités de rapport détaillées, share-depenses transforme la gestion financière de groupe en une expérience simple et agréable.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --config nodemon.json src/index.js",
+    "prod": "cross-env NODE_ENV=production nodemon --config nodemon.json src/index.js"
+  },
+  "author": "mouhcine errebache",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "http-errors": "^2.0.0",
+    "i18next": "^23.7.13",
+    "i18next-http-middleware": "^3.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "nodemon": "^3.0.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
