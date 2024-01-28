@@ -7,7 +7,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
   if (!(err instanceof ErrorHandler)) {
     const locale = req.language || 'en'; 
-    err = new ErrorHandler(500, err.message || 'INTERNAL_SERVER_ERROR', false, 'GENERIC_ERR', locale);
+    err = new ErrorHandler(status, err.message || 'INTERNAL_SERVER_ERROR', false, 'GENERIC_ERR', locale);
   }
 
   console.error(err);
@@ -20,6 +20,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     code: err.code,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
+  next(err);
 };
 
 module.exports = errorHandlerMiddleware;

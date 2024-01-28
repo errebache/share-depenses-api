@@ -5,6 +5,7 @@ const groupRouter = require("./group");
 const notificationRouter = require("./notification");
 const expenseRouter = require("./expense");
 const currencyRouter = require("./currency");
+const userAuth = require('./auth');
 
 
 
@@ -14,6 +15,7 @@ router.use('/groups', groupRouter);
 router.use('/photos', photoRouter);
 router.use('/expenses', expenseRouter);
 router.use('/notifications', notificationRouter);
+router.use('/auth', userAuth);
 
 
 

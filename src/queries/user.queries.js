@@ -8,11 +8,6 @@ exports.getUser = async (userId) => {
     return await User.findById(userId);
 };
 
-exports.createUser = async (userData) => {
-    const user = new User(userData);
-    return await user.save();
-};
-
 exports.deleteUser = async (userId) => {
     return await User.findByIdAndDelete(userId);
 };
@@ -24,3 +19,14 @@ exports.updateUser = async (userId, userData) => {
 exports.searchUser = (search) => {
     return User.find({ name: new RegExp(search, 'i')}).exec();
   }
+
+
+exports.checkIfEmailExists = async (email) => {
+    try {
+        const user = await User.findOne({ email: email });
+        return !!user; // Simplified return statement
+    } catch (error) {
+        console.error('Error checking if email exists:', error);
+        throw error;
+    }
+};

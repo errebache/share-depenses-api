@@ -14,6 +14,5 @@ module.exports = (err, req, res, next) => {
     err = new ErrorHandler(400, 'VALIDATION_ERROR', true, errors, locale);
   }
 
-  // Pass the error to the next error handling middleware
   next(err);
 };

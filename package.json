@@ -20,10 +20,15 @@
     "i18next": "^23.7.13",
     "i18next-http-middleware": "^3.5.0",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "mongoose": "^8.0.3",
-    "nodemon": "^3.0.2"
+    "nodemailer": "^6.9.8",
+    "nodemailer-sparkpost-transport": "^2.2.0",
+    "nodemon": "^3.0.2",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.8",
     "cross-env": "^7.0.3"
   }
 }
