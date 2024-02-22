@@ -5,7 +5,6 @@ const mongooseErrorMiddleware = require('./src/middleware/mongooseErrorMiddlewar
 const errorHandlerMiddleware = require('./src/middleware/errorHandlerMiddleware');
 
 
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
