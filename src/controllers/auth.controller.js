@@ -78,8 +78,12 @@ exports.userAuth = async (req, res, next) => {
       } else {
         return res
           .status(401)
-          .send({ auth: false, message: "Email / Password not correct" });
+          .send({ auth: false, message: "Password not correct" });
       }
+    } else {
+      return res
+          .status(401)
+          .send({ auth: false, message: "Email not correct" });
     }
   } catch (error) {
     next(new ErrorHandler(500, "INTERNAL_SERVER_ERROR"));

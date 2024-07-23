@@ -15,14 +15,11 @@ const listSchema = new Schema(
     group: {
       type: Schema.Types.ObjectId,
       ref: "groups",
-      required: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "users",
-      required: true,
     },
-    expenses: { type: Schema.Types.ObjectId, ref: "expenses" },
     image: {
       original: String,
       large: String,
@@ -44,7 +41,7 @@ const listSchema = new Schema(
       },
     },
   },
-  { timestamps: true } // Active les timestamps pour créer automatiquement les champs createdAt et updatedAt
+  { timestamps: true }
 );
 
 const ListModel = mongoose.model("lists", listSchema);

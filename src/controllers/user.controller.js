@@ -12,6 +12,10 @@ const bcrypt = require("bcrypt");
 const emails = require("../_config/emails");
 const moment = require("moment");
 const { v4: uuid } = require("uuid");
+const ListModel = require("../database/models/list.model");
+const GroupModel = require("../database/models/group.model");
+const InvitedModel = require("../database/models/invited.model");
+const UserModel = require("../database/models/user.model");
 
 exports.userList = async (req, res, next) => {
   try {
@@ -251,5 +255,58 @@ exports.resetPassword = async (req, res, next) => {
   } catch (e) {
     console.error("Error resetting password:", e);
     next(e);
+  }
+};
+
+exports.usersList = async (req, res, next) => {
+  try {
+    const listId = req.params.listId;
+
+    if (!mongoose.Types.ObjectId.isValid(listId)) {
+      return res.status(400).json({ error: 'Invalid list ID' });
+    }
+
+    const list = await ListModel.findById(listId);
+    if (!list) {
+      return res.status(404).json({ error: `List with ID ${listId} not found` });
+    }
+
+    const groupId = list.group;
+
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+      return res.status(400).json({ error: 'Invalid group ID' });
+    }
+
+    const group = await GroupModel.findById(groupId);
+    if (!group) {
+      return res.status(404).json({ error: `Group with ID ${groupId} not found` });
+    }
+
+    const memberIds = group.members;
+
+    // Exécute toutes les requêtes en parallèle
+    const userPromises = memberIds.map(async (memberId) => {
+      if (!mongoose.Types.ObjectId.isValid(memberId)) {
+        console.error(`Invalid member ID: ${memberId}`);
+        return null;
+      }
+
+      let user = await UserModel.findById(memberId).select('-__v -createdAt');
+      if (!user) {
+        user = await InvitedModel.findById(memberId).select('-__v -createdAt');
+      }
+      return user;
+    });
+
+    // Attend que toutes les requêtes soient terminées
+    const users = await Promise.all(userPromises);
+
+    // Filtrer les éléments null
+    const filteredUsers = users.filter(user => user !== null);
+
+    res.status(200).json(filteredUsers);
+  } catch (error) {
+    // Gestion des erreurs
+    next(error);
   }
 };

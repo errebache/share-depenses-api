@@ -1,4 +1,4 @@
-const { userList, userDetails, userDelete, searchUser, emailLinkVerification, initResetPassword, resetPassword, resetPasswordToken, emailValide } = require('../../controllers/user.controller');
+const { userList, userDetails, userDelete, searchUser, emailLinkVerification, initResetPassword, resetPassword, resetPasswordToken, emailValide, usersList } = require('../../controllers/user.controller');
 
 
 const router = require('express').Router();
@@ -13,5 +13,6 @@ router.post("/forgot-password", initResetPassword);
 router.get("/reset-password/:userId/:token", resetPasswordToken);
 router.post("/reset-password/:userId/:token", resetPassword);
 
+router.get('/usersList/:listId', usersList);
 
 module.exports = router;

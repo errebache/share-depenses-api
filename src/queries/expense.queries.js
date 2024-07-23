@@ -5,7 +5,21 @@ exports.getExpenses = async () => {
 };
 
 exports.getExpense = async (expenseId) => {
-    return await Expense.findById(expenseId).populate("paidBy").populate("splitAmong");
+  try {
+    const expense = await Expense.findById(expenseId)
+      .populate('paidBy') // Supposons que cela renvoie des détails sur la personne qui a payé.
+      .populate({ 
+        path: 'splitAmong', // Peuple les informations dans splitAmong
+        populate: { 
+          path: 'userId', // Peuple les informations d'utilisateur pour chaque entrée dans splitAmong
+          model: 'users' // Assurez-vous que 'User' correspond au nom du modèle que vous souhaitez peupler.
+        } 
+      });
+    return expense;
+  } catch (error) {
+    console.error('Error getting expense:', error);
+    throw error; // ou retourner une réponse d'erreur spécifique
+  }
 };
 
 exports.addNewExpense = async (data) => {
