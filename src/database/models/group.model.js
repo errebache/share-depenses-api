@@ -9,7 +9,6 @@ const groupSchema = mongoose.Schema(
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "users",
-      required: true,
     },
   },
   { timestamps: true }
