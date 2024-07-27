@@ -3,8 +3,6 @@ const Schema = mongoose.Schema;
 
 const groupSchema = mongoose.Schema(
   {
-    name: String,
-    description: String,
     members: [{ type: Schema.Types.ObjectId,ref: "users"}],
     createdBy: {
       type: Schema.Types.ObjectId,

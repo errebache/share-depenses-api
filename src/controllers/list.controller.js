@@ -58,9 +58,9 @@ exports.addList = async (req, res, next) => {
    const invitedUsers = [];
 
    if(groups && Array.isArray(groups)){
-    for (const group of groups) {
-      invitedUsers.push(group); 
-    }
+      for (const group of groups) {
+        invitedUsers.push(group); 
+      }
     }
 
     const savedInvitedUsers = {};
@@ -78,8 +78,6 @@ exports.addList = async (req, res, next) => {
     memberIds.push(createdBy._id);
 
     const newGroup = new GroupModel({
-      name: "Nom du groupe",
-      description: "Description du groupe",
       members: memberIds,
       createdBy: createdBy._id,
     });

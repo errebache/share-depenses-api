@@ -37,9 +37,24 @@ exports.expenseDetail = async (req, res, next) => {
 
 exports.addExpense = async (req, res, next) => {
   try {
+    console.log("Request body:", req.body);
+
+    const { paidBy, amount, list, description, splitAmong, category, image } = req.body;
+
+    if (!paidBy || !amount || !list || !description) {
+      console.error("Validation error: Missing required fields");
+      return next(new ErrorHandler(400, 'All fields are required'));
+    }
+
+    if (!Array.isArray(splitAmong) || splitAmong.some(sa => !sa.userId || !sa.amount)) {
+      console.error("Validation error: Invalid splitAmong format");
+      return next(new ErrorHandler(400, 'Invalid splitAmong format'));
+    }
+
     const newExpense = await addNewExpense(req.body);
     res.status(201).json(newExpense);
   } catch (error) {
+    console.error("Error adding expense:", error);
     next(new ErrorHandler(500, 'INTERNAL_SERVER_ERROR'));
   }
 };

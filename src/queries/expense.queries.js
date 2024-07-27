@@ -23,8 +23,17 @@ exports.getExpense = async (expenseId) => {
 };
 
 exports.addNewExpense = async (data) => {
-  const newExpense = new Expense(data);
-  return await newExpense.save();
+  try {
+    console.log('------data--------')
+    console.log(data);
+    const newExpense = new Expense(data);
+    const savedExpense = await newExpense.save();
+    console.log('Expense saved:', savedExpense);
+    return savedExpense;
+  } catch (error) {
+    console.error('Error saving expense:', error);
+    throw error;
+  }
 };
 
 exports.updateExpense = async (id, data) => {
