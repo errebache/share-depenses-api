@@ -201,7 +201,7 @@ exports.editList = async (req, res, next) => {
   try {
     const updatedList = await updateList(req.params.listId, req.body);
     if (!updatedList) {
-      throw new ErrorHandler(404, "LIST_NOT_FOUND");
+      return res.status(404).json({ message: `List not found with ID ${req.params.listId}` });
     }
     res.json(updatedList);
   } catch (error) {
@@ -238,9 +238,10 @@ exports.deleteList = async (req, res, next) => {
     await GroupModel.findByIdAndDelete(groupId);
     const deleted = await deleteList(req.params.listId);
     if (!deleted) {
-      throw new ErrorHandler(404, "LIST_NOT_FOUND");
+      return res.status(404).json({ message: `No expense found with ID ${req.params.listId}` });
     }
-    res.status(204).end();
+
+    res.status(200).json({ message: `Expense with ID ${req.params.listId} has been deleted.` });
   } catch (error) {
     if (error instanceof mongoose.CastError) {
       next(new ErrorHandler(400, "INVALID_ID_FORMAT"));

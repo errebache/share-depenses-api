@@ -13,7 +13,7 @@ const ExpenseSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   splitAmong: [{
     userId: { type: Schema.Types.ObjectId, ref: "users" },
-    amount: { type: Number, required: true }
+    amount: { type: Number, required: false }
   }],
   category: { type: String },
   image: { type: String }, // Assuming the image is stored as a URL

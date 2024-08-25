@@ -1,8 +1,23 @@
 const Expense = require('../database/models/expense.model');
 
 exports.getExpenses = async () => {
-  await Expense.find().populate("paidBy").populate("splitAmong");
+  try {
+    const expenses = await Expense.find()
+      .populate('paidBy')
+      .populate({
+        path: 'splitAmong',
+        populate: {
+          path: 'userId',
+          model: 'users' // Assurez-vous que 'User' est bien le nom correct du modèle
+        }
+      });
+    return expenses;
+  } catch (error) {
+    console.error('Error getting expenses:', error);
+    throw error; // Relancer l'erreur pour qu'elle soit capturée par le contrôleur
+  }
 };
+
 
 exports.getExpense = async (expenseId) => {
   try {
@@ -24,8 +39,6 @@ exports.getExpense = async (expenseId) => {
 
 exports.addNewExpense = async (data) => {
   try {
-    console.log('------data--------')
-    console.log(data);
     const newExpense = new Expense(data);
     const savedExpense = await newExpense.save();
     console.log('Expense saved:', savedExpense);
@@ -43,12 +56,22 @@ exports.updateExpense = async (id, data) => {
 };
 
 exports.deleteExpense = async (id) => {
-  return await Expense.findByIdAndDelete(id).exec()
-    .then(() => {
+  try {
+    const deletedExpense = await Expense.findByIdAndDelete(id).exec();
+
+    if (deletedExpense) {
       console.log(`Deleted expense ${id}`);
-    })
-    .catch((err) => console.log(err));
+      return deletedExpense;  // Renvoie le document supprimé
+    } else {
+      console.log(`No expense found with ID ${id}`);
+      return null;  // Renvoie null si aucun document n'a été trouvé
+    }
+  } catch (err) {
+    console.error(`Error deleting expense ${id}:`, err);
+    throw err;  // Relance l'erreur pour être gérée en amont
+  }
 };
+
 
 exports.totalAmount = async () => {
     try {
@@ -68,6 +91,46 @@ exports.totalAmount = async () => {
     }
   };
 
-exports.searchExpense = (search) => {
-    return Expense.find({ description: new RegExp(search, 'i')}).exec();
-  }
+  exports.searchExpense = async (searchCriteria) => {
+    try {
+      const query = {};
+  
+      // Ajoutez des critères de recherche dynamiquement en fonction de ce qui est fourni dans searchCriteria
+      if (searchCriteria.paidBy) {
+        query.paidBy = searchCriteria.paidBy;
+      }
+  
+      if (searchCriteria.amount) {
+        query.amount = searchCriteria.amount;
+      }
+  
+      if (searchCriteria.description) {
+        query.description = new RegExp(searchCriteria.description, 'i');
+      }
+  
+      if (searchCriteria.splitAmong) {
+        query['splitAmong.userId'] = searchCriteria.splitAmong;
+      }
+  
+      if (searchCriteria.category) {
+        query.category = new RegExp(searchCriteria.category, 'i');
+      }
+  
+      if (searchCriteria.createdAt) {
+        query.createdAt = { $gte: new Date(searchCriteria.createdAt) };
+      }
+
+      console.log(query);
+  
+      const expenses = await Expense.find(query)
+        .populate('paidBy')
+        .populate('splitAmong.userId')
+        .exec();
+  
+      return expenses;
+    } catch (error) {
+      console.error('Error searching expenses:', error);
+      throw error;
+    }
+  };
+  

@@ -3,17 +3,35 @@ const GroupModel = require("../database/models/group.model");
 const ExpenseModel = require("../database/models/expense.model");
 
 exports.getLists = async () => {
-  const lists = await ListModel.find()
-    .populate("createdBy")
-    .populate("expenses")
-    .populate({
-      path: "group",
-      populate: {
-        path: "members",
-        model: "users",
-      },
-    });
-  return lists;
+  try {
+    const lists = await ListModel.find()
+      .populate("createdBy")
+      .populate({
+        path: "group",
+        populate: {
+          path: "members",
+          model: "users",
+        },
+      });
+    // // Pour chaque liste, récupérer les dépenses associées
+    // const lists = await Promise.all(listsModel  .map(async (list) => {
+    //   // Récupérer les dépenses associées à cette liste
+    //   const expenses = await ExpenseModel.find({ list: list._id });
+
+    //   // Débogage : Afficher les dépenses récupérées pour cette liste
+    //   console.log(`Expenses for list ${list._id}:`, expenses);
+
+    //   // Convertir le document Mongoose en objet JavaScript pur pour permettre l'ajout du champ `expenses`
+    //   const listObject = list.toObject();
+    //   listObject.expenses = expenses; // Ajouter les dépenses à la liste
+
+    //   return listObject; // Retourner la liste enrichie
+    // }));
+    return lists;
+  } catch (error) {
+    console.error("Error fetching lists:", error);
+    throw new Error("Internal Server Error");
+  }
 };
 
 exports.getListDetail = async (listId) => {
