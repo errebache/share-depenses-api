@@ -39,7 +39,7 @@ const listSchema = new Schema(
         index: Boolean,
         create: Boolean,
       },
-    },
+    }
   },
   { timestamps: true }
 );
